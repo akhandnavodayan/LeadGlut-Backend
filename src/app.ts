@@ -8,7 +8,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import walletRouter from './routes/wallet.routes.js';
 import leadRouter from './routes/lead.routes.js';
-import whatsappService from './services/whatsapp.service.js';
+import whatsappService from './services/whatsapp.service';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.js';
 
@@ -64,7 +64,9 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 const PORT = process.env.PORT || 3000;
-
+// ई लाइन लिखला से WhatsApp सर्विस नींद से जाग जाई और QR कोड दे दी!
+console.log("Initializing WhatsApp Bot...");
+whatsappService;
 app.listen(PORT, () => {
     console.log(`🛡️  LeadGlut Server is running on port ${PORT}`);
     void whatsappService;
