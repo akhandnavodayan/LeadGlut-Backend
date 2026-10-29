@@ -1,54 +1,32 @@
-FROM node:20-bullseye
+# Base image - 'bookworm' (Debian 12) use kaila se 404 error fix ho jaai
+FROM node:20-bookworm
 
-ENV NODE_ENV=production
-ENV PUPPETEER_SKIP_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
-
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        chromium \
-        ca-certificates \
-        fonts-liberation \
-        libasound2 \
-        libatk-bridge2.0-0 \
-        libatk1.0-0 \
-        libc6 \
-        libcairo2 \
-        libcups2 \
-        libdbus-1-3 \
-        libdrm2 \
-        libgbm1 \
-        libglib2.0-0 \
-        libgtk-3-0 \
-        libnspr4 \
-        libnss3 \
-        libpango-1.0-0 \
-        libx11-6 \
-        libx11-xcb1 \
-        libxcb1 \
-        libxcomposite1 \
-        libxdamage1 \
-        libxext6 \
-        libxfixes3 \
-        libxrandr2 \
-        xdg-utils \
+# Install Chromium and dependencies for whatsapp-web.js
+RUN apt-get update && apt-get install -y \
+    chromium \
+    libnss3 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libxkbcommon0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    libgbm1 \
+    libasound2 \
     && rm -rf /var/lib/apt/lists/*
+
+# Tell Puppeteer to use the installed Chromium
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --include=dev
+RUN npm install
 
-COPY tsconfig.json ./
-COPY src ./src
-RUN npm run build \
-    && npm prune --omit=dev
-
-RUN mkdir -p /app/whatsapp-session \
-    && chown -R node:node /app
-
-USER node
+COPY . .
 
 EXPOSE 3000
 
-CMD ["node", "dist/app.js"]
+# Running with tsx, exactly how you ran it successfully on your MacBook!
+CMD ["npx", "tsx", "src/app.ts"]
