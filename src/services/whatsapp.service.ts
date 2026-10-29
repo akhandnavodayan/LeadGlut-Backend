@@ -13,7 +13,15 @@ export class WhatsAppService {
       puppeteer: {
         headless: true,
         executablePath: process.env.PUPPETEER_EXECUTABLE_PATH,
-        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        args: [
+          '--no-sandbox', 
+          '--disable-setuid-sandbox',
+          '--disable-dev-shm-usage', // ई सबसे मेन बा, Docker में RAM फुल ना होखे दी
+          '--disable-gpu',
+          '--no-zygote',
+          '--single-process',        // एकदम कम RAM में क्रोमियम चलावे खातिर
+          '--disable-accelerated-2d-canvas'
+        ],
       },
     });
 
