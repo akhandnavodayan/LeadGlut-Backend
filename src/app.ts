@@ -8,7 +8,7 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import walletRouter from './routes/wallet.routes.js';
 import leadRouter from './routes/lead.routes.js';
-import whatsappService from './services/whatsapp.service';
+import whatsappService from './services/whatsapp.service.js';
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.js';
 
